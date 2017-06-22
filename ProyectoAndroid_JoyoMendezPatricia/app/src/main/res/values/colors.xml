@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="azul">#0101DF</color>
+    <color name="moradoC">#F4A5E6</color>
+    <color name="naranja">#FF4000</color>
+    <color name="rosadoC">#FA58AC</color>
+    <color name="rojo">#FF0000</color>
+    <color name="plomoc"> #BDBDBD</color>
+    <color name="verdeF">#40FF00</color>
+
+    <color name="celeste">#00FFFF</color>
+
+    <color name="morado">#8000FF</color>
+
+    <color name="fucsia">#FF00FF</color>
+
+    <color name="negro">#000000</color>
+
+    <color name="blanco">#FFFFFF</color>
+
+    <color name="plomo">#2E2E2E</color>
+
+    <color name="rosadoO">#FF0040</color>
+
+    <color name="rosado">#FE2E64</color>
+
+    <color name="morado2">#BF00FF</color>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="data">
+      <item >DNI</item>
+        <item >Carnet de Extranjeria</item>
+
+    </string-array>
+    <string-array name="carac">
+        <item >Activo</item>
+        <item >Desactivo</item>
+
+    </string-array>
+</resources>
