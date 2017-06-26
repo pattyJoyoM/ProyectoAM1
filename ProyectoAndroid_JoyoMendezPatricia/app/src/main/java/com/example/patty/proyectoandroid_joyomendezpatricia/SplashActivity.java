@@ -15,7 +15,7 @@ import java.util.TimerTask;
  */
 
 public class SplashActivity extends AppCompatActivity {
-    private static final long SPLASH_SCREEN_DELAY = 5000;
+    private static final long SPLASH_SCREEN_DELAY = 4000;
     ImageView icon;
 
     @Override

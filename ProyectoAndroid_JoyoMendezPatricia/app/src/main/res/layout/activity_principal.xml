@@ -6,20 +6,18 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/fragDatos"
+        android:id="@+id/flLista"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"/>
 
-    <fragment
-    android:id="@+id/fragLista"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:name="com.example.patty.proyectoandroid_joyomendezpatricia.ListaPersonaActivity"
-    />
 
 
+    <FrameLayout
+        android:id="@+id/flDatos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
 
 </LinearLayout>

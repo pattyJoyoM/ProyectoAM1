@@ -2,12 +2,15 @@ package com.example.patty.proyectoandroid_joyomendezpatricia;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -82,6 +85,8 @@ public class EditarPersonaActivity extends AppCompatActivity {
 
     }
 
+
+
     public final View.OnClickListener btnEditarEOnClickListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -132,7 +137,7 @@ public class EditarPersonaActivity extends AppCompatActivity {
         });
     }
 
-    @Override
+    /*@Override
     @Deprecated
     protected Dialog onCreateDialog(int id) {
         // TODO Auto-generated method stub
@@ -162,7 +167,7 @@ public class EditarPersonaActivity extends AppCompatActivity {
                 break;
         }
         return null;
-    }
+    }*/
 
 
 }

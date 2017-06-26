@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@drawable/fn1"
-    android:padding="30dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
 
     <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/fn1"
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <EditText
@@ -73,14 +70,14 @@
                     android:textColor="@color/blanco"
                     android:textSize="15sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tvFechaCA"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
 
-                    android:hint="Seleccionar"
+                    android:hint="Seleccionar Fecha"
                     android:textColor="@color/blanco"
                     android:textColorHint="@color/blanco"
                     android:textSize="18sp" />
@@ -165,4 +162,3 @@
 
     </ScrollView>
 
-</LinearLayout>

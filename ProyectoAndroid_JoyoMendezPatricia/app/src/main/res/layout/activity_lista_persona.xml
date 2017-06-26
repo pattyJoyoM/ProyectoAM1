@@ -11,13 +11,5 @@
     android:layout_height="0dp"
     android:layout_weight="1"
  />
-    <Button
-        android:id="@+id/btnAgregarP"
-        android:background="@color/moradoC"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Agregar"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/blanco"/>
+
 </LinearLayout>
