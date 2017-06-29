@@ -147,51 +147,7 @@ public class AgregarPersonaActivity extends Fragment {
            // showDialog(100);
         }
     };
-    /*
-        @Override
-        protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_datos_persona_agregar);
 
-            tvNombreA=(EditText)findViewById(R.id.tvNombreA);
-            tvApellidoA=(EditText)findViewById(R.id.tvApellidoA);
-            tvDireccionA=(EditText)findViewById(R.id.tvDireccionA);
-            tvNumDocA=(EditText)findViewById(R.id.tvNumDocA);
-            tvEdadA=(EditText)findViewById(R.id.tvEdadA);
-
-
-            tvFechaCA=(TextView) findViewById(R.id.tvFechaCA);
-            tvFechaCA.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDialog(100);
-                }
-            });
-
-
-            spTipoDocA =(Spinner)findViewById(R.id.spTipoDocA);
-            spCarac = (Spinner) findViewById(R.id.spCarac);
-            btnAceptarA=(Button)findViewById(R.id.btnAceptar);
-
-            btnAceptarA.setOnClickListener(btnAceptarAOnClickListener);
-
-
-            mPersonaA=getIntent().getParcelableExtra("arg_persona");
-
-            if (mPersonaA!=null) {
-                tvNumDocA.setText(String.valueOf(mPersonaA.getNumeroDocumento()));
-                tvNombreA.setText(mPersonaA.getNombre());
-                tvApellidoA.setText(mPersonaA.getApellido());
-                tvDireccionA.setText(mPersonaA.getDirecion());
-                tvEdadA.setText(String.valueOf(mPersonaA.getEdad()));
-                tvFechaCA.setText(mPersonaA.getFecha());
-            }
-
-            events();
-
-
-    }
-    */
 private  void  events()
 {
     spCarac.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -221,61 +177,6 @@ private  void  events()
     });
 
 }
-    /*@Override
-    @Deprecated
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        switch (id) {
-            case 100:
-                final Calendar c=Calendar.getInstance();
-                int year=c.get(Calendar.YEAR);
-                int month=c.get(Calendar.MONTH);
-                int day=c.get(Calendar.DAY_OF_MONTH);
 
-                return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        String s= dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
-                        Log.v("CONSOLE", "s "+s);
-                        tvFechaCA.setText(s);
-                        tvFechaCA.setTag(1);
-
-
-                    }
-                }, year, month, day);
-
-            default:
-                break;
-        }
-        return null;
-    }*/
-/*
-
-    public final View.OnClickListener btnAceptarAOnClickListener=new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (mPersonaA==null)
-            {mPersonaA=new PersonaEntity();
-
-                mPersonaA.setId(java.util.UUID.randomUUID().toString());
-            }
-
-            mPersonaA.setNombre(tvNombreA.getText().toString());
-            mPersonaA.setApellido(tvApellidoA.getText().toString());
-            mPersonaA.setEdad(Integer.parseInt(tvEdadA.getText().toString()));
-            mPersonaA.setDirecion(tvDireccionA.getText().toString());
-            mPersonaA.setCarac(spCarac.getSelectedItem().toString());
-            mPersonaA.setTipoDocumento(spTipoDocA.getSelectedItem().toString());
-            mPersonaA.setNumeroDocumento(tvNumDocA.getText().toString());
-            mPersonaA.setFecha(tvFechaCA.getText().toString());
-            Intent intent=new Intent();
-            intent.putExtra("arg_persona",mPersonaA);
-            setResult(RESULT_OK,intent);
-            finish();
-        }
-    };*/
 
 }

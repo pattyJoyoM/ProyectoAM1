@@ -12,7 +12,6 @@
         android:layout_weight="1"/>
 
 
-
     <FrameLayout
         android:id="@+id/flDatos"
         android:layout_width="match_parent"

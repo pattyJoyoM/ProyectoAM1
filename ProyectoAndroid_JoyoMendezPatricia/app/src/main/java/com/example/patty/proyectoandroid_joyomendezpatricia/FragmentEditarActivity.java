@@ -15,11 +15,8 @@ public class FragmentEditarActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_editar);
-       /* (editarPersonaActivity = (EditarPersonaActivity)
-                EditarPersonaActivity) instantiate(FragmentEditarActivity
-        .this,EditarPersonaActivity.class.getName());
-        getFragmentManager().beginTransaction().replace(R.id.
-                flEditar,editarPersonaActivity).commit();*/
+        editarPersonaActivity = (EditarPersonaActivity)EditarPersonaActivity.instantiate(FragmentEditarActivity.this,EditarPersonaActivity.class.getName());
+        getFragmentManager().beginTransaction().replace(R.id.flEditar,editarPersonaActivity).commit();
 
     }
 }

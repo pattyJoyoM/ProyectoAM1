@@ -34,13 +34,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
              if (etuser.getText().toString().equals("isil") &&
-                     etpass.getText().toString().equals("123")){
+                     etpass.getText().toString().equals("123")||etuser.getText().toString().equals("paty") &&
+                     etpass.getText().toString().equals("joyo")){
                  gotoMain();
              }
              else
              {
                  Toast.makeText(getApplicationContext(), "Contraseña y/o usuario incorrecto",
                          Toast.LENGTH_SHORT).show();
+
              }
 
             }
@@ -64,6 +66,24 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this,PrincipalActivity.class);
         startActivity(intent);
         finish();
+    }
+
+
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
     }
 
 }

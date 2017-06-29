@@ -76,7 +76,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-
+                    android:inputType="datetime"
+                    android:maxLength="8"
                     android:hint="Seleccionar Fecha"
                     android:textColor="@color/blanco"
                     android:textColorHint="@color/blanco"

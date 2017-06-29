@@ -45,22 +45,34 @@ public class ListaPersonaActivity extends Fragment implements RVPersonaAdapter.R
 
 
     @Override
-    public void onClickButtom(PersonaEntity personaEntity) {
-      /*  Intent intent = new Intent(getActivity(),EditarPersonaActivity.class);
+    public void onClickItem(PersonaEntity personaEntity) {
+      /*Intent intent = new Intent(getActivity(),FragmentEditarActivity.class);
         intent.putExtra("arg_persona",personaEntity);
         startActivity(intent);*/
      /*   Fragment fragment = new FragmentoInicio();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.frame_container, fragment).commit()*/
+       /* FragmentEditarActivity newFragment = new FragmentEditarActivity();
+        FragmentTransaction transaction =  getFragmentManager().beginTransaction();
+        transaction.replace(R.id.flLista,newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+*/
+       Bundle bundle = new Bundle();
+        bundle.putParcelable("arg_persona", personaEntity);
+        Intent intent = new Intent(getActivity(),EditarPersonaActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
 
     }
-/*
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
             mRVPersonaAdapter.add((PersonaEntity) data.getParcelableExtra("arg_persona"));
 
-    }*/
+    }
 }

@@ -72,11 +72,13 @@
                     android:textColor="@color/blanco"
                     android:textSize="15sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tvFechaCE"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:inputType="datetime"
+                    android:maxLength="8"
                     android:gravity="right"
                     android:text="Seleccionar"
                     android:textColor="@color/blanco"

@@ -32,4 +32,5 @@ public class PrincipalActivity extends AppCompatActivity implements AgregarPerso
     public void onListaFragmentClick(PersonaEntity personaEntity) {
         listaPersonaActivity.add(personaEntity);
     }
+
 }

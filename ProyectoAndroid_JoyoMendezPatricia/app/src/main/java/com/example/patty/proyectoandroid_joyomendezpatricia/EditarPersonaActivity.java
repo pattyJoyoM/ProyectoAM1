@@ -24,48 +24,38 @@ import java.util.Calendar;
  * Created by PATTY on 21/06/2017.
  */
 
-public class EditarPersonaActivity extends AppCompatActivity {
+public class EditarPersonaActivity extends Fragment {
 
-    private TextView tvFechaCE;
+    private Button btnEditarE,btnEliminarE;
+    private PersonaEntity mPersonaE;
+    private EditText tvFechaCE;
     private EditText tvNombreE, tvApellidoE,tvDireccionE,tvNumDocE,tvEdadE;
     private Spinner spTipoDocE,spCaracE;
     private  String Tipo=null;
     private String carac=null;
 
-
-    private Button btnEditarE,btnEliminarE;
-    private PersonaEntity mPersonaE;
-
-   // private RVPersonaAdapter application;
-
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_datos_persona_editar);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view=inflater.inflate(R.layout.activity_datos_persona_editar,container,false);
 
-        tvNombreE=(EditText)findViewById(R.id.tvNombreE);
-        tvApellidoE=(EditText)findViewById(R.id.tvApellidoE);
-        tvDireccionE=(EditText)findViewById(R.id.tvDireccionE);
-        tvEdadE=(EditText)findViewById(R.id.tvEdadE);
-        tvFechaCE=(TextView) findViewById(R.id.tvFechaCE);
-        tvNumDocE=(EditText)findViewById(R.id.tvNumDocE);
+        tvNombreE=(EditText)view.findViewById(R.id.tvNombreE);
+        tvApellidoE=(EditText)view.findViewById(R.id.tvApellidoE);
+        tvDireccionE=(EditText)view.findViewById(R.id.tvDireccionE);
+        tvEdadE=(EditText)view.findViewById(R.id.tvEdadE);
+        tvFechaCE=(EditText) view.findViewById(R.id.tvFechaCE);
+        tvNumDocE=(EditText)view.findViewById(R.id.tvNumDocE);
 
-        tvFechaCE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(100);
-            }
-        });
+        spTipoDocE =(Spinner)view.findViewById(R.id.spTipoDocE);
+        spCaracE = (Spinner)view. findViewById(R.id.spCaracE);
+        btnEditarE=(Button)view.findViewById(R.id.btnEditarE);
+        btnEliminarE=(Button)view.findViewById(R.id.btnEliminarE) ;
 
-
-        spTipoDocE =(Spinner)findViewById(R.id.spTipoDocE);
-        spCaracE = (Spinner) findViewById(R.id.spCaracE);
-        btnEditarE=(Button)findViewById(R.id.btnEditarE);
-
+        btnEliminarE.setOnClickListener(btnEliminarEOnClickListener);
         btnEditarE.setOnClickListener(btnEditarEOnClickListener);
 
 
-        mPersonaE=getIntent().getParcelableExtra("arg_persona");
+      //  mPersonaE=getIntent().getParcelableExtra("arg_persona");
 
         if (mPersonaE!=null) {
 
@@ -80,36 +70,11 @@ public class EditarPersonaActivity extends AppCompatActivity {
 
         events();
 
-      //  application=(RVPersonaAdapter)getApplication();
-
-
+        return view;
     }
 
-
-
-    public final View.OnClickListener btnEditarEOnClickListener=new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (mPersonaE==null)
-            {mPersonaE=new PersonaEntity();
-
-                mPersonaE.setId(java.util.UUID.randomUUID().toString());
-            }
-
-            mPersonaE.setNombre(tvNombreE.getText().toString());
-            mPersonaE.setApellido(tvApellidoE.getText().toString());
-            mPersonaE.setEdad(Integer.parseInt(tvEdadE.getText().toString()));
-            mPersonaE.setDirecion(tvDireccionE.getText().toString());
-            mPersonaE.setCarac(spCaracE.getSelectedItem().toString());
-            Intent intent=new Intent();
-            intent.putExtra("arg_persona",mPersonaE);
-            setResult(RESULT_OK,intent);
-            finish();
-
-
-        }
-    };
-    public  void events(){
+    public void events()
+    {
         spCaracE.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long id) {
@@ -137,37 +102,33 @@ public class EditarPersonaActivity extends AppCompatActivity {
         });
     }
 
-    /*@Override
-    @Deprecated
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        switch (id) {
-            case 100:
-                final Calendar c=Calendar.getInstance();
-                int year=c.get(Calendar.YEAR);
-                int month=c.get(Calendar.MONTH);
-                int day=c.get(Calendar.DAY_OF_MONTH);
+    private final View.OnClickListener btnEditarEOnClickListener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mPersonaE==null)
+            {mPersonaE=new PersonaEntity();
 
-                return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                mPersonaE.setId(java.util.UUID.randomUUID().toString());
+            }
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        String s= dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
-                        Log.v("CONSOLE", "s "+s);
-                        tvFechaCE.setText(s);
-                        tvFechaCE.setTag(1);
-
-
-                    }
-                }, year, month, day);
-
-            default:
-                break;
+            mPersonaE.setNombre(tvNombreE.getText().toString());
+            mPersonaE.setApellido(tvApellidoE.getText().toString());
+            mPersonaE.setEdad(Integer.parseInt(tvEdadE.getText().toString()));
+            mPersonaE.setDirecion(tvDireccionE.getText().toString());
+            mPersonaE.setCarac(spCaracE.getSelectedItem().toString());
+            Intent intent=new Intent();
+            intent.putExtra("arg_persona",mPersonaE);
+         //   setResult(RESULT_OK,intent);
+           // finish();
         }
-        return null;
-    }*/
+    };
 
+
+    private final View.OnClickListener btnEliminarEOnClickListener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
 
 }

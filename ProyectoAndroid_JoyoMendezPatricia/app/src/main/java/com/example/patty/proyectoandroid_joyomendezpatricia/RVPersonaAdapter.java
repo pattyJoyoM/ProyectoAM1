@@ -19,7 +19,7 @@ public class RVPersonaAdapter  extends RecyclerView.Adapter<RVPersonaAdapter.RVP
 
     interface RVPersonaAdapterListener
     {
-        void onClickButtom(PersonaEntity personaEntity);
+        void onClickItem(PersonaEntity personaEntity);
     }
     private RVPersonaAdapterListener mRVPersonaAdapterListener;
 
@@ -97,11 +97,11 @@ public class RVPersonaAdapter  extends RecyclerView.Adapter<RVPersonaAdapter.RVP
 
         holder.itemView.setTag(personaEntity);
 
-        //  holder.itemView.setOnClickListener(itemViewOnClickListener);
+         holder.itemView.setOnClickListener(itemViewOnClickListener);
 
         holder.btnEditar.setTag(personaEntity);
 
-        holder.btnEditar.setOnClickListener(btnEditarOnClickListener);
+        //holder.btnEditar.setOnClickListener(btnEditarOnClickListener);
 
         holder.tvNombreCompleto.setText(personaEntity.getNombre()+" "+personaEntity.getApellido());
         holder.tvDireccion.setText(personaEntity.getDirecion());
@@ -131,12 +131,13 @@ public class RVPersonaAdapter  extends RecyclerView.Adapter<RVPersonaAdapter.RVP
 
         }
     }
-    private final View.OnClickListener btnEditarOnClickListener=new View.OnClickListener() {
+    private final View.OnClickListener itemViewOnClickListener=new View.OnClickListener() {
         @Override
         public void onClick(View view) {
 
             if (mRVPersonaAdapterListener != null)
-                mRVPersonaAdapterListener.onClickButtom((PersonaEntity) view.getTag());
+                mRVPersonaAdapterListener.onClickItem((PersonaEntity) view.getTag());
+
 
         }
     };
