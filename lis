@@ -1,0 +1,346 @@
+$(document).ready(function () {
+
+    var ubicGeog = new Tawa.GestHum.Seguridad.Vista.UbicGeog.Pagina();
+    ubicGeog.Inicializar();
+
+});
+
+ns('Tawa.GestHum.Seguridad.Vista.UbicGeog.Pagina')
+
+try {
+
+    Tawa.GestHum.Seguridad.Vista.UbicGeog.Pagina = function (entorno) {
+        'use strict';
+        var base = this;
+        base.Entorno = entorno;
+        base.Util = new Tawa.GestHum.Shared.Util();
+
+        base.Inicializar = function () {
+            base.Funciones.InicializarObjetos();
+            base.Funciones.InicializarEventos();
+            base.Funciones.AccionListarGrid();
+
+
+        };
+        base.Controles = {
+            Grid: null,
+            GridListar: null,
+            GridBody: null,
+            TxtDescripcion: null,
+            DdlPaisBusqueda: null,
+            CmbPais: null,
+            LinkBuscar: null,
+            LinkNuevo: null,
+            //LinkNuevoRegistro: null,
+            LinkGuardar: null,
+            LinkEditar: null,
+            LinkEliminar: null,
+            ModalNuevo: null,
+            //ModalNuevoRegistro: null,
+            TxtCodigoUbicGeo: null,
+            //TxtDesUbicGeog: null,
+            //TxtNumCodPostal: null
+        };
+        base.Funciones = {
+            InicializarObjetos: function () {
+                'use strict';
+
+                base.Controles.ParametrosFiltro = {};
+
+                base.Controles.GridBody = $('#tblLista tbody');
+                base.Controles.GridListar = $('#tblLista');
+                base.Controles.TxtDescripcion = $('#txtDescripcion');
+                base.Controles.DdlPaisBusqueda = $('#ddlPaisBusqueda');
+                base.Controles.CmbPais = $('#ddlPais')//n
+                base.Controles.LinkBuscar = $('#lnkBuscar');
+                base.Controles.LinkNuevo = $('#btnNuevo'); //$("#lnkNuevo");
+                //base.Controles.LinkNuevoRegistro = $("#lnkNuevoRegistro");
+                base.Controles.LinkGrabar = $("#btnGrabar");
+                base.Controles.LinkEditar = $("#lnkEditar");
+                base.Controles.LinkEliminar = $("#lnkEliminar");
+                base.Controles.ModalNuevo = $("#divNuevo");
+                //base.Controles.ModalNuevoRegistro = $("#divNuevoRegistro");
+                base.Controles.TxtCodigoUbicGeo = $('#txtCodigoUbicGeo');
+                //base.Controles.TxtDesUbicGeog = $('#txtDesUbicGeog');
+                //base.Controles.TxtNumCodPostal = $('#txtNumCodPostal');
+
+
+            },
+            InicializarEventos: function () {
+                'use strict';
+                base.Controles.LinkBuscar.on('click', base.Eventos.LinkBuscarClick);
+                base.Controles.LinkNuevo.on('click', base.Eventos.LinkNuevoClick);
+                //base.Controles.LinkNuevoRegistro.on('click', base.Eventos.LinkNuevoRegistroClick);
+                base.Controles.LinkGrabar.on('click', base.Eventos.LinkGrabarClick);
+                base.Controles.TxtCodigoUbicGeo.on('keypress', base.Util.Eventos.TxtNumeroKeyPress);
+                //base.Controles.TxtDesUbicGeog.on('copy', function () { return false });
+                //base.Controles.TxtDesUbicGeog.on('cut', function () { return false });
+                //base.Controles.TxtDesUbicGeog.on('paste', function () { return false });
+                //base.Controles.TxtCodigoUbicGeo.on('copy', function () { return false });
+                //base.Controles.TxtCodigoUbicGeo.on('cut', function () { return false });
+                //base.Controles.TxtCodigoUbicGeo.on('paste', function () { return false });
+                //base.Controles.TxtNumCodPostal.on('copy', function () { return false });
+                //base.Controles.TxtNumCodPostal.on('cut', function () { return false });
+                //base.Controles.TxtNumCodPostal.on('paste', function () { return false });
+
+            },
+            AccionListarGrid: function () {
+                'use strict';
+                base.Controles.Grid = base.Controles.GridListar.DataTable({
+
+                    "language": {
+
+                        "info": "",
+                        "paginate": {
+                            "previous": "<<",
+                            "next": ">>"
+                        }
+                    },
+                    destroy: true,
+
+
+                    searching: false,
+
+
+                    "bProcessing": true,
+                    "sAjaxDataProp": "",
+                    //"ajax": {
+                    //    "url": "UbicGeog/Listar",
+                    //    "type": "GET",
+                    //    "dataType": "json",
+                    //    "data": /*function (d)*/ { idePais: base.Controles.DdlPaisBusqueda.val() == '' ? '0' : base.Controles.DdlPaisBusqueda.val()}
+                    //},
+                    "columns": [
+                        { "title": "Id", "data": "IdeUbicGeog", "visible": false },
+                        { "title": "IdPais", "data": "IdePais", "visible": false },
+                        //{ "title": "Cód.País", "data": "CodPais" },
+                        //{ "title": "Nombre País", "data": "NomPais" },
+                        { "title": "Ubigeo", "data": "CodUbicGeog" },
+                        { "title": "Descripción", "data": "DesUbicGeog" },
+                        { "title": "Cód.Postal", "data": "NumCodiPost" },
+                        {
+                            "title": "",
+                            "className": "text-center",
+                            "render": function (data, type, full, meta) {
+                                return '<a id="lnkEditar" style="cursor: pointer;"><img src="/Content/Open-iconic/svg/pencil.svg" width="12" height="12" alt="Editar" data-toggle="tooltip" data-placement="bottom" title="Editar"></a>';
+                            }
+                        },
+                        {
+                            "title": "",
+                            "className": "text-center",
+                            "render": function (data, type, full, meta) {
+                                return '<a id="lnkEliminar" style="cursor: pointer;"><img src="/Content/Open-iconic/svg/x.svg" width="12" height="12" alt="Eliminar" data-toggle="tooltip" data-placement="bottom" title="Eliminar"></a>';
+                            }
+                        }
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [
+
+                        { "extend": 'pdf', "title": 'Listado de Ubicaciónes Geográfica', "text": 'PDF', "className": 'btn btn-outline-info btn-sm' },
+                        { "extend": 'excel', "title": 'Listado de Ubicaciónes Geográfica', "text": 'Excel', "className": 'btn btn-outline-info btn-sm' },
+                    ]
+                });
+
+                base.Controles.GridBody = $('#tblLista tbody');
+                base.Controles.GridBody.on('click', 'a[id="lnkEditar"]', base.Eventos.LinkEditarClick);
+                base.Controles.GridBody.on('click', 'a[id="lnkEliminar"]', base.Eventos.LinkELiminarClick);
+
+            },
+            AccionBuscarGrid: function () {
+                'use strict';
+
+                $.ajax({
+                    method: "GET",
+                    url: "UbicGeog/Buscar",
+                    data: {
+                        nombre: base.Controles.TxtDescripcion.val(),
+                        idePais: base.Controles.DdlPaisBusqueda.val() == '' ? '0' : base.Controles.DdlPaisBusqueda.val()
+                    },
+                    dataType: "json",
+                    cache: false
+                }).done(function (data) {
+                    $('#hdIdPaisBusqueda').val(data.idePais);
+                    base.Controles.Grid.clear().draw();
+                    base.Controles.Grid.rows.add(data).draw();
+
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+
+                ''
+            },
+            AccionRegistrar: function () {
+                'use strict';
+                var ubicGeog = {
+                    IdeUbicGeog: $('#hdIdUbicGeog').val(),
+                    IdePais: $('#ddlPais').val(),
+                    CodUbicGeog: $('#txtCodigoUbicGeo').val(),
+                    DesUbicGeog: $('#txtDesUbicGeog').val(),
+                    NumCodiPost: $('#txtNumCodPostal').val(),
+                }
+
+                $.ajax({
+                    method: "POST",
+                    url: "/UbicGeog/Registrar",
+                    data: { m_UbicGeog: ubicGeog },
+                    dataType: "json",
+                    cache: false
+                }).done(function (data) {
+                    base.Controles.ModalNuevo.modal('hide');
+                    base.Funciones.AccionBuscarGrid();
+                    //base.Funciones.AccionListarPais();
+                    Tawa.GestHum.UI.Mensaje(data.exc);
+
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+                //base.Funciones.AccionListarCombo();
+            },
+            AccionEliminar: function (IdeUbicGeog) {
+                'use strict';
+
+                var msjParametro = {
+                    'Tipo': Tawa.GestHum.UI.TipoMensaje.Alerta,
+                    'Mensaje': '¿Seguro de Eliminar?',
+                    'ClickSi': function () {
+                        $.ajax({
+                            method: "POST",
+                            url: "/UbicGeog/Eliminar",
+                            data: { id: IdeUbicGeog },
+                            dataType: "json",
+                            cache: false
+                        }).done(function (data) {
+
+                            Tawa.GestHum.UI.Mensaje(data.exc);
+                            base.Funciones.AccionBuscarGrid();
+                            //base.Funciones.AccionListarPais();
+
+                        }).fail(function (jqXHR, textStatus) {
+                            alert("Request failed: " + textStatus);
+                        });
+                    }
+                };
+
+                Tawa.GestHum.UI.Mensaje(msjParametro);
+
+            },
+            AccionObtener: function (IdeUbicGeog) {
+                'use strict';
+
+                $.ajax({
+                    method: "GET",
+                    url: "/UbicGeog/Obtener",
+                    data: { id: IdeUbicGeog },
+                    dataType: "json",
+                    cache: false
+                }).done(function (data) {
+                    $('#hdIdUbicGeog').val(data.IdeUbicGeog);
+                    $('#ddlPais').val(data.IdePais);
+                    $('#ddlPais').prop('disabled', true);
+                    $('#txtCodigoUbicGeo').val(data.CodUbicGeog);
+                    $('#txtCodigoUbicGeo').prop('disabled', true);
+                    $('#txtDesUbicGeog').val(data.DesUbicGeog);
+                    $('#txtNumCodPostal').val(data.NumCodiPost);
+
+                    base.Controles.ModalNuevo.modal('show');
+
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+
+            },
+            AccionListarPais: function () {
+                'use strict';
+                $.ajax({
+                    method: "GET",
+                    url: "/UbicGeog/ListarPais",
+                    dataType: "json",
+                    cache: false
+                }).done(function (data) {
+                    $('#ddlPaisBusqueda').find('option').remove();
+
+                    var itemSeleccionar = '<option selected="selected" value="">Seleccionar</option>';
+                    $('#ddlPaisBusqueda').append(itemSeleccionar);
+
+                    for (var i = 0; i < data.length; i++) {
+                        $('#ddlPaisBusqueda').append($("<option></option>").attr("value", data[i].IdePais).text(data[i].NomPais));
+                    }
+
+                    $('#ddlPaisBusqueda').val();
+
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+
+            },
+            AccionGuardarPais: function () {
+                'use strict';
+                $('#ddlPaisBusqueda').change(function () {
+                    var paisBusqueda = "";
+                    $('ddlPaisBusqueda option:#hdIdUbicGeog').each(function () {
+                        paisBusqueda += $(this).text() + "";
+                    });
+                    $('#ddlPaisBusqueda').text(paisBusqueda);
+                })
+                    .change();
+            },
+            AccionLimpiarModal: function () {
+                'use strict';
+
+                $('#hdIdUbicGeog').val(0);
+                $('#hdIdPais').val(0);
+                $('#dllPais').val('');
+                $('#dllPais').prop('disabled', false);
+                $('#txtCodigoUbicGeo').val("");
+                $('#txtCodigoUbicGeo').prop('disabled', false);
+                $('#txtDesUbicGeog').val("");
+                $('#txtNumCodPostal').val("");
+            }
+
+        };
+        base.Eventos = {
+            LinkBuscarClick: function () {
+                'use strict';
+                //base.Funciones.AccionListarGrid();
+                base.Funciones.AccionBuscarGrid();
+            },
+            LinkNuevoClick: function () {
+                'use strict';
+                base.Funciones.AccionLimpiarModal();
+                base.Controles.ModalNuevo.modal('show');
+
+            },
+            //LinkNuevoRegistroClick: function () {
+            //    'use strict';
+            //    base.Controles.ModalNuevoRegistro.modal('show');
+            //},
+            LinkGrabarClick: function () {
+                'use strict';
+                if (base.Util.Funciones.AccionValidarError('divNuevo') == true) {
+                    base.Funciones.AccionRegistrar();
+                    base.Funciones.AccionGuardarPais();
+                }
+              
+            },
+            LinkEditarClick: function () {
+                'use strict';
+                base.Funciones.AccionLimpiarModal();
+
+                var id = base.Controles.Grid.row(this.parentElement.parentElement).data().IdeUbicGeog
+                base.Funciones.AccionObtener(id);
+            },
+            LinkELiminarClick: function () {
+                'use strict';
+
+                var id = base.Controles.Grid.row(this.parentElement.parentElement).data().IdeUbicGeog
+                base.Funciones.AccionEliminar(id);
+                base.Funciones.AccionGuardarPais();
+            }
+        }
+
+    };
+
+}
+catch (ex) {
+    //ubicgeo
+};
