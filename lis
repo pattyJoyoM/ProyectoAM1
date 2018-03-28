@@ -344,3 +344,141 @@ try {
 catch (ex) {
     //ubicgeo
 };
+
+
+----------------------------------------------------------
+
+@using rsSeguridad = Tawa.GestHum.Resource.Seguridad
+@using rsShared = Tawa.GestHum.Resource.Shared
+
+@model Tawa.GestHum.Web.Areas.Seguridad.Models.UbicGeogModel
+@{
+    ViewBag.Title = "Index";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form>
+    <div class="row">
+        <div class="col-4">
+            <h4 class="text-secondary">@rsSeguridad.UbicGeogString.EtiquetaTitulo</h4>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="">
+
+                <div class="btn-group m-b-10 m-r-10" role="group" aria-label="Button group with nested dropdown">
+                    <button id="btnNuevo" type="button" class="btn btn-secondary font-18" data-toggle="tooltip" data-placement="bottom" title="Nuevo"><i class="mdi mdi-hospital"></i></button>
+                    <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Ayuda"><i class="mdi mdi-alert-octagon"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <input id="hdIdPaisBusqueda" type="hidden" value="0" />
+                <label for="recipient-name" class="text-info">@rsSeguridad.UbicGeogString.EtiquetaPais</label>
+                @Html.DropDownList("ddlPaisBusqueda", new SelectList(Model.ListarTipoPais, "IdePais", "nomPais", "Seleccionar"), rsShared.SharedString.EtiquetaSeleccionar, new { @class = "form-control form-control-sm", @necesario = "necesario" })
+            </div>
+        </div>
+        <div class="col-lg-8">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="lblDes" class="text-info">@rsSeguridad.UbicGeogString.EtiquetaDescripcion</label>
+                <input type="text" maxlength="50" class="form-control form-control-sm" id="txtDescripcion" placeholder="Descripción">
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <label class="control-label" for="lknBuscar">
+                &nbsp;
+            </label>
+            <div class="form-group">
+                <button id="lnkBuscar" type="button" class="btn btn-outline-info btn-sm btn-block">
+                    Buscar
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-6">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="display nowrap table table-hover table-striped table-bordered dataTable" id="tblLista" width="100%"></table>
+        </div>
+    </div>
+
+</form>
+<script src="@Url.Content("~/Scripts/Areas/Seguridad/Views/UbicGeog/Index.js")"></script>
+
+
+<div class="modal fade" id="divNuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLabel">@rsSeguridad.UbicGeogString.EtiquetaTitulo1</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="hdIdUbicGeog" type="hidden" value="0" />
+                <input id="hdIdPais" type="hidden" value="0" />
+                <input id="hdCodPais" type="hidden" value="0" />
+                <form>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsSeguridad.UbicGeogString.EtiquetaPais</label>
+                                @Html.DropDownList("ddlPais", new SelectList(Model.ListaPais, "IdePais", "nomPais", ""), rsShared.SharedString.EtiquetaSeleccionar, new { @class = "form-control form-control-sm", @necesario = "necesario" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsSeguridad.UbicGeogString.EtiquetaCodigo</label>
+                                <input type="text" maxlength="10" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtCodigoUbicGeo" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsSeguridad.UbicGeogString.EtiquetaDescripcion</label>
+                                <input type="text" maxlength="50" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtDesUbicGeog" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsSeguridad.UbicGeogString.EtiquetaNumCodiPost</label>
+                                <input type="text" maxlength="6" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtNumCodPostal">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">@rsShared.SharedString.EtiquetaCancelar</button>
+                <button id="btnGrabar" type="button" class="btn btn-success btn-sm">@rsShared.SharedString.EtiquetaGrabar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
