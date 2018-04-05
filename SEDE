@@ -1,0 +1,747 @@
+--CONTROL
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Tawa.GestHum.BusinessLogic.Nomina;
+using Tawa.GestHum.Entities.Nomina;
+using Tawa.GestHum.Web.Areas.Nomina.Models;
+using Tawa.GestHum.Entities.Views;
+using Tawa.GestHum.Web.Controllers.Shared;
+
+namespace Tawa.GestHum.Web.Areas.Nomina.Controllers
+{
+    public class SedeController : Controller
+    {
+        GESHUMDataModel db = new GESHUMDataModel();
+        // GET: Nomina/Sede
+        public ActionResult Index()
+        {
+            M_SedeBL m_SedeBL = new M_SedeBL();
+
+            SedeModel sedeModel = new SedeModel();
+            sedeModel.ListarTipoCasa = m_SedeBL.ListarTipoCasa();
+            sedeModel.ListarTipoSedeRtps = m_SedeBL.ListarTipoSedeRtps();
+            sedeModel.ListarTipoVia = m_SedeBL.ListarVias();
+            sedeModel.ListarTipoZona = m_SedeBL.ListarZona();
+
+            return View(sedeModel);
+        }
+
+        //public JsonResult Listar()
+        //{ }
+        public JsonResult Buscar(string descripcion)
+        {
+            M_SedeBL m_SedeBL = new M_SedeBL();
+            SedeModel sedeModel = new SedeModel();
+
+            sedeModel.Listar = m_SedeBL.Buscar(descripcion);
+
+            return Json(sedeModel.Listar, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult Registrar(M_Sede m_Sede)
+        {
+            M_SedeBL m_SedeBL = new M_SedeBL();
+            Excepcion excepcion = new Excepcion();
+            excepcion = m_SedeBL.Registrar(m_Sede);
+            return Json(new { exc = excepcion }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult Eliminar(int id)
+        {
+            M_SedeBL m_SedeBL = new M_SedeBL();
+            Excepcion excepcion = new Excepcion();
+
+            excepcion = m_SedeBL.Eliminar(id);
+            return Json(new { exc = excepcion }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult Obtener(int id)
+        {
+            M_SedeBL m_SedeBL = new M_SedeBL();
+            M_Sede m_Sede = new M_Sede();
+
+            m_Sede = m_SedeBL.Obtener(id);
+
+            return Json(m_Sede, JsonRequestBehavior.AllowGet);
+        }
+
+    }
+
+-MODEL
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Tawa.GestHum.Entities.Views.Nomina;
+using Tawa.GestHum.Web.Models.Shared;
+
+namespace Tawa.GestHum.Web.Areas.Nomina.Models
+{
+    public class SedeModel:BaseModel
+    {
+        public int IdeSede { get; set; }
+
+        public int ideEmpr { get; set; }
+
+        public string CodSede { get; set; }
+
+        public string DesSede { get; set; }
+
+        public string EstDomiFisc { get; set; }
+
+        public int? IdeSedeRtps { get; set; }
+
+        public string DesSedeRtps { get; set; }
+
+        public string NumRucSede { get; set; }
+
+        public int? IdeTipoCasa { get; set; }
+
+        public string DesTipoCasa { get; set; }
+
+        public int? IdeVias { get; set; }
+
+        public string DesVias { get; set; }
+
+        public string DirSede { get; set; }
+
+        public string NroCasa { get; set; }
+
+        public string NroInte { get; set; }
+
+        public int? IdeZona { get; set; }
+
+        public string DesZona { get; set; }
+
+        public string NomZona { get; set; }
+
+        public string DesRefe { get; set; }
+
+        public string NroFruc { get; set; }
+
+        public string EstCrie { get; set; }
+
+        public decimal? ImpCrie { get; set; }
+
+        public int? IdeUbicGeog { get; set; }
+
+        public string CodUbicGeog { get; set; }
+
+        public List<SedeDto> Listar { get; set;}
+        public List<TipoCasaDto> ListarTipoCasa { get; set; }
+        public List<TipoViasDto> ListarTipoVia { get; set; }
+        public List<TipoSedeRtpsDto> ListarTipoSedeRtps { get; set; }
+        public List<TipoZonaDto> ListarTipoZona { get; set; }
+    }
+
+
+-VIEWS
+
+@using rsNomina = Tawa.GestHum.Resource.Nomina
+@using rsShared = Tawa.GestHum.Resource.Shared
+
+@model Tawa.GestHum.Web.Areas.Nomina.Models.SedeModel
+@{
+    ViewBag.Title = "Index";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form>
+    <div class="row">
+        <div class="col-4">
+            <h4 class="text-secondary">@rsNomina.SedeString.EtiquetaTitulo</h4>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="">
+
+                <div class="btn-group m-b-10 m-r-10" role="group" aria-label="Button group with nested dropdown">
+                    <button id="btnNuevo" type="button" class="btn btn-secondary font-18" data-toggle="tooltip" data-placement="bottom" title="Nuevo"><i class="mdi mdi-hospital"></i></button>
+                    <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Ayuda"><i class="mdi mdi-alert-octagon"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="lblDes" class="text-info">@rsNomina.SedeString.EtiquetaDesSede</label>
+                <input type="text" maxlength="50" class="form-control form-control-sm" id="txtDescripcion" placeholder="Descripción">
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <label class="control-label" for="lknBuscar">
+                &nbsp;
+            </label>
+            <div class="form-group">
+                <button id="lnkBuscar" type="button" class="btn btn-outline-info btn-sm btn-block">
+                    Buscar
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-6">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="display nowrap table table-hover table-striped table-bordered dataTable" id="tblLista" width="100%"></table>
+        </div>
+    </div>
+
+</form>
+
+<script src="~/Scripts/Areas/Nomina/Views/Sede/Index.js"></script>
+
+<div class="modal fade" id="divNuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLabel">@rsNomina.SedeString.EtiquetaTitulo1</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="hdIdSede" type="hidden" value="0" />
+                <input id="hdIdEmpr" type="hidden" value="0" />
+                <form>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaCodSede</label>
+                                <input type="text" maxlength="10" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtCodSede" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaDesSede</label>
+                                <input type="text" maxlength="50" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtDesSede" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaNumRucSede</label>
+                                <input type="text" maxlength="20" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtNumRucSede" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaNroFruc</label>
+                                <input type="text" maxlength="20" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtNroFruc" necesario>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaIdeSedeRtps</label>
+                                    @Html.DropDownList("ddlTipoSedeRtps", new SelectList(Model.ListarTipoSedeRtps, "IdeSedeRtps", "DesSedeRtps", ""), "Seleccionar", new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="chkEstDomiFisc">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        @rsNomina.SedeString.EtiquetaEstDomiFisc
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="chkEstCrie">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        @rsNomina.SedeString.EtiquetaEstCrie
+                                    </label>
+                                </div>
+                            </div>
+                            @*<div class="row">*@
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaImpCrie</label>
+                                        <input type="text" maxlength="5" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtImpCrie" necesario>
+                                    </div>
+                                </div>
+                            @*</div>*@
+                        </div>
+                   
+                  
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaIdeTipoCasa</label>
+                                @Html.DropDownList("ddlTipoCasa", new SelectList(Model.ListarTipoCasa, "IdeTipoCasa", "DesTipoCasa", ""), "Seleccionar", new { @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm"> @rsNomina.SedeString.EtiquetaIdeVia</label>
+                                @Html.DropDownList("ddlTipoVia", new SelectList(Model.ListarTipoVia, "IdeVias", "DesVias", ""), "Seleccionar", new { @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaDirSede</label>
+                                <input type="text" maxlength="50" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtDirSede" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaNroCasa</label>
+                                <input type="text" maxlength="10" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtNroCasa" necesario>
+                            </div>
+                        </div>
+                    @*</div>
+                    <div class="row">*@
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaNroInte</label>
+                                <input type="text" maxlength="10" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtNroInte" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaIdeZona</label>
+                                @Html.DropDownList("ddlTipoZona", new SelectList(Model.ListarTipoZona, "IdeZona", "DesZona", ""), "Seleccionar", new { @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaNomZona</label>
+                                <input type="text" maxlength="50" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtNomZona" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaDesRefe</label>
+                                <input type="text" maxlength="100" class="form-control form-control-sm" ondrag="return false" ondrop="return false" id="txtDesRefe" necesario>
+                            </div>
+                        </div>
+                    </div>
+                    @*COMBO*@
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaDepa</label>
+                                @Html.DropDownList("ddlUbigeoDepa", new SelectList(Model.ListarTipoZona, "IdeZona", "DesZona", ""), "Seleccionar", new { @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                        @*</div>
+            <div class="row">*@
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaProv</label>
+                                @Html.DropDownList("ddlUbigeoProv", new SelectList(Model.ListarTipoZona, "IdeZona", "DesZona", ""), "Seleccionar", new { @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                        @*</div>
+            <div class="row">*@
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label-sm">@rsNomina.SedeString.EtiquetaDist</label>
+                                @Html.DropDownList("ddlUbigeoDist", new SelectList(Model.ListarTipoZona, "IdeZona", "DesZona", ""), "Seleccionar", new { @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                    </div>
+                    @*COMBO*@
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">@rsShared.SharedString.EtiquetaCancelar</button>
+                <button id="btnGrabar" type="button" class="btn btn-success btn-sm">@rsShared.SharedString.EtiquetaGrabar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+*--JS
+
+$(document).ready(function () {
+
+    var sede = new Tawa.GestHum.Nomina.Vista.Sede.Pagina();
+    sede.Inicializar();
+
+});
+
+ns('Tawa.GestHum.Nomina.Vista.Sede.Pagina')
+
+try {
+    Tawa.GestHum.Nomina.Vista.Sede.Pagina = function (entorno) {
+        'use strict';
+        var base = this;
+        base.Entorno = entorno;
+        base.Util = new Tawa.GestHum.Shared.Util();
+
+        base.Inicializar = function () {
+            base.Funciones.InicializarObjetos();
+            base.Funciones.InicializarEventos();
+            base.Funciones.AccionListarGrid();
+        };
+
+        base.Controles = {
+            Grid: null,
+            GridListar: null,
+            GridBody: null,
+            TxtDescripcion: null,
+            LinkBuscar: null,
+            LinkNuevo: null,
+            LinkNuevoRegistro: null,
+            LinkGuardar: null,
+            LinkEditar: null,
+            LinkEliminar: null,
+            ModalNuevo: null,
+        };
+        base.Funciones = {
+            InicializarObjetos: function () {
+                'use strict';
+
+                base.Controles.ParametrosFiltro = {};
+
+                base.Controles.GridBody = $('#tblLista tbody');
+                base.Controles.GridListar = $('#tblLista');
+                base.Controles.TxtDescripcion = $('#txtDescripcion');
+                base.Controles.CmbPais = $('#ddlPais')//n
+                base.Controles.LinkBuscar = $('#lnkBuscar');
+                base.Controles.LinkNuevo = $('#btnNuevo'); //$("#lnkNuevo");
+                base.Controles.LinkNuevoRegistro = $("#lnkNuevoRegistro");
+                base.Controles.LinkGrabar = $("#btnGrabar");
+                base.Controles.LinkEditar = $("#lnkEditar");
+                base.Controles.LinkEliminar = $("#lnkEliminar");
+                base.Controles.ModalNuevo = $("#divNuevo");
+                base.Controles.ModalNuevoRegistro = $("#divNuevoRegistro");
+            },
+            InicializarEventos: function () {
+                'use strict';
+                base.Controles.LinkBuscar.on('click', base.Eventos.LinkBuscarClick);
+                base.Controles.LinkNuevo.on('click', base.Eventos.LinkNuevoClick);
+                base.Controles.LinkNuevoRegistro.on('click', base.Eventos.LinkNuevoRegistroClick);
+                base.Controles.LinkGrabar.on('click', base.Eventos.LinkGrabarClick);
+            },
+            AccionListarGrid: function () {
+                'use strict';
+                var diasSemana = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
+                var meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                var f = new Date();
+
+                var d = diasSemana[f.getDate()] + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
+                base.Controles.Grid = base.Controles.GridListar.DataTable({
+
+                    "language": {
+
+                        "info": "",
+                        "paginate": {
+                            "previous": "<<",
+                            "next": ">>"
+                        }
+                    },
+                    destroy: true,
+
+                    "sScrollX": "100%",
+                    searching: false,
+
+
+                    "bProcessing": true,
+                    "sAjaxDataProp": "",
+                    "ajax": {
+                        "url": "Sede/Buscar",
+                        "type": "GET",
+                        "dataType": "json",
+                        "data": { descripcion: '' }
+                    },
+                    "columns": [
+                        { "title": "Id", "data": "IdeSede", "visible": false },
+                        { "title": "IdPais", "data": "ideEmpr", "visible": false },
+                        { "title": "Código", "data": "CodSede" },
+                        { "title": "Descripción", "data": "DesSede" },
+                        { "title": "Domicilio  <br/>fiscal", "data": "EstDomiFisc" },
+                        { "title": "IdeSedeRtps", "data": "IdeSedeRtps", "visible": false  },
+                        { "title": "Descripción  <br/>de sede", "data": "DesSedeRtps" },
+                        { "title": "Ficha  <br/>RUC", "data": "NumRucSede" },
+                        { "title": "IdeTipoCasa", "data": "IdeTipoCasa", "visible": false  },
+                        { "title": "Descripcion  <br/> de casa", "data": "DesTipoCasa" },
+                        { "title": "IdeVias", "data": "IdeVias", "visible": false  },
+                        { "title": "Via", "data": "DesVias" },
+                        { "title": "Dirección  <br/>de Sede", "data": "DirSede" },
+                        { "title": "Numero", "data": "NroCasa" },
+                        { "title": "Interior", "data": "NroInte" },
+                        { "title": "IdeZona", "data": "IdeZona", "visible": false  },
+                        { "title": "Zona", "data": "DesZona" },
+                        { "title": "Nombre  <br/>Zona", "data": "NomZona" },
+                        { "title": "Referencia", "data": "DesRefe" },
+                        { "title": "Ficha  <br/>RUC", "data": "NroFruc" },
+                        { "title": "Centro  <br/>Riesgo", "data": "EstCrie" },
+                        { "title": "Tasa %", "data": "ImpCrie" },
+                        { "title": "IdeUbicGeog", "data": "IdeUbicGeog", "visible": false  },
+                        { "title": "Ubigeo", "data": "CodUbicGeog" },
+
+                        {
+                            "title": "",
+                            "className": "text-center",
+                            "render": function (data, type, full, meta) {
+                                return '<a id="lnkEditar" style="cursor: pointer;"><img src="/Content/Open-iconic/svg/pencil.svg" width="12" height="12" alt="Editar" data-toggle="tooltip" data-placement="bottom" title="Editar"></a>';
+                            }
+                        },
+                        {
+                            "title": "",
+                            "className": "text-center",
+                            "render": function (data, type, full, meta) {
+                                return '<a id="lnkEliminar" style="cursor: pointer;"><img src="/Content/Open-iconic/svg/x.svg" width="12" height="12" alt="Eliminar" data-toggle="tooltip" data-placement="bottom" title="Eliminar"></a>';
+                            }
+                        }
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [
+
+                        {
+                            "extend": 'pdf', messageTop: d, "title": 'Listado de Sedes', "text": 'PDF', "className": 'btn btn-outline-info btn-sm', "exportOptions": { columns: [2, 3, 4, 5, 6, 7] },
+                            customize: function (doc) {
+                                doc.styles.title.fontSize = 20;
+                                doc.content[0].text = doc.content[0].text.trim();
+                                // Create a footer
+                                doc['header'] = (function (page, pages) {
+                                    return {
+                                        columns: [
+                                            d
+
+
+                                        ],
+                                        margin: [20, 20]
+                                    }
+                                });
+                                doc['footer'] = (function (page, pages) {
+                                    return {
+                                        columns: [
+                                            {
+                                                // This is the right column
+                                                alignment: 'right',
+                                                text: ['página ', { text: page.toString() }, ' de ', { text: pages.toString() }]
+                                            }
+                                        ],
+                                        margin: [20, 20]
+                                    }
+                                });
+                            }
+                        },
+                        { "extend": 'excel', messageTop: d, "title": 'Listado de Sedes', "text": 'Excel', "className": 'btn btn-outline-info btn-sm', "exportOptions": { columns: [2, 3, 4, 5, 6, 7] } },
+                    ]
+                });
+
+                base.Controles.GridBody = $('#tblLista tbody');
+                base.Controles.GridBody.on('click', 'a[id="lnkEditar"]', base.Eventos.LinkEditarClick);
+                base.Controles.GridBody.on('click', 'a[id="lnkEliminar"]', base.Eventos.LinkELiminarClick);
+            },
+            AccionBuscarGrid: function () {
+                'use strict';
+
+                $.ajax({
+                    method: "GET",
+                    url: "/Sede/Buscar",
+                    data: { descripcion: base.Controles.TxtDescripcion.val() },
+                    dataType: "json",
+                    cache: false
+                }).done(function (data) {
+
+                    base.Controles.Grid.clear().draw();
+                    base.Controles.Grid.rows.add(data).draw();
+
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            },
+            AccionRegistrar: function () {
+                'use strict';
+                var sede = {
+                    IdeSede: $('#hdIdSede').val(),
+                    ideEmpr: $('#hdIdEmpr').val(),
+                    CodSede: $('#txtCodSede').val(),
+                    DesSede: $('#txtDesSede').val(),
+                    EstDomiFisc: $('#chkEstDomiFisc').is(":checked") == true ? 'S' : 'N',
+                    IdeSedeRtps: $('#ddlTipoSedeRtps').val(),
+                    NumRucSede: $('#txtNumRucSede').val(),
+                    IdeTipoCasa: $('#ddlTipoCasa').val(),
+                    IdeVias: $('#ddlTipoVia').val(),
+                    DirSede: $('#txtDirSede').val(),
+                    NroCasa: $('#txtNroCasa').val(),
+                    NroInte: $('#txtNroInte').val(),
+                    IdeZona: $('#ddlTipoZona').val(),
+                    NomZona: $('#txtNomZona').val(),
+                    DesRefe: $('#txtDesRefe').val(),
+                    NroFruc: $('#txtNroFruc').val(),
+                    EstCrie: $('#chkEstCrie').is(":checked") == true ? 'S' : 'N',
+                    ImpCrie: $('#txtImpCrie').val(),
+                    IdeUbicGeog: $('#ddlUbigeoDepa').val(),
+
+                }
+
+                $.ajax({
+                    method: "POST",
+                    url: "/Sede/Registrar",
+                    data: { m_Sede: sede },
+                    dataType: "json",
+                    cache: false
+                }).done(function (data) {
+                    base.Controles.ModalNuevo.modal('hide');
+                    base.Funciones.AccionBuscarGrid();
+                    Tawa.GestHum.UI.Mensaje(data.exc);
+
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+
+            },
+            AccionEliminar: function (ideSede) {
+                'use strict';
+
+                var msjParametro = {
+                    'Tipo': Tawa.GestHum.UI.TipoMensaje.Alerta,
+                    'Mensaje': '¿Seguro de Eliminar?',
+                    'ClickSi': function () {
+                        $.ajax({
+                            method: "POST",
+                            url: "/Sede/Eliminar",
+                            data: { id: ideSede },
+                            dataType: "json",
+                            cache: false
+                        }).done(function (data) {
+
+                            Tawa.GestHum.UI.Mensaje(data.exc);
+                            base.Funciones.AccionBuscarGrid();
+
+                        }).fail(function (jqXHR, textStatus) {
+                            alert("Request failed: " + textStatus);
+                        });
+                    }
+                };
+
+                Tawa.GestHum.UI.Mensaje(msjParametro);
+            },
+            AccionObtener: function (ideSede) {
+                'use strict';
+
+                $.ajax({
+                    method: "GET",
+                    url: "/Sede/Obtener",
+                    data: { id: ideSede },
+                    dataType: "json",
+                    cache: false
+                }).done(function (data) {
+
+                    $('#hdIdSede').val(data.ideSede);
+                    $('#hdIdEmpr').val(data.ideEmpr);
+                    $('#txtCodSede').val(data.CodSede);
+                    $('#txtDesSede').val(data.DesSede);
+                    $('#chkEstDomiFisc').val(data.EstDomiFisc);
+                    $('#ddlTipoSedeRtps').val(data.IdeSedeRtps);
+                    $('#ddlTipoSedeRtps').prop('disabled', true);
+                    $('#txtNumRucSede').val(data.NumRucSede);
+                    $('#ddlTipoCasa').val(data.IdeTipoCasa);
+                    $('#ddlTipoVia').val(data.IdeVias);
+                    $('#ddlTipoVia').prop('disabled', true);
+                    $('#txtDirSede').val(data.DirSede);
+                    $('#txtNroCasa').val(data.NroCasa);
+                    $('#txtNroInte').val(data.NroInte);
+                    $('#ddlTipoZona').val(data.IdeZona);
+                    $('#txtNomZona').val(data.NomZona);
+                    $('#txtDesRefe').val(data.DesRefe);
+                    $('#txtNroFruc').val(data.NroFruc);
+                    $('#chkEstCrie').val(data.EstCrie);
+                    $('#txtImpCrie').val(data.ImpCrie);
+                    $('#ddlUbigeoDepa').val(data.IdeUbicGeog);
+
+                    base.Controles.ModalNuevo.modal('show');
+
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            },
+            AccionLimpiarModal: function () {
+                $('#hdIdSede').val(0);
+                $('#hdIdEmpr').val(0);
+                $('#txtCodSede').val("");
+                $('#txtDesSede').val("");
+                $('#chkEstDomiFisc').val("");
+                $('#ddlTipoSedeRtps').val("");
+                $('#ddlTipoSedeRtps').prop('disabled', false);
+                $('#txtNumRucSede').val("");
+                $('#ddlTipoCasa').val("");
+                $('#ddlTipoVia').val("");
+                $('#ddlTipoVia').prop('disabled', false);
+                $('#txtDirSede').val("");
+                $('#txtNroCasa').val("");
+                $('#txtNroInte').val("");
+                $('#ddlTipoZona').val("");
+                $('#txtNomZona').val("");
+                $('#txtDesRefe').val("");
+                $('#txtNroFruc').val("");
+                $('#chkEstCrie').val("");
+                $('#txtImpCrie').val("");
+                $('#ddlUbigeoDepa').val("");
+            }
+        };
+        base.Eventos = {
+            LinkBuscarClick: function () {
+                'use strict';
+                base.Funciones.AccionBuscarGrid();
+            },
+            LinkNuevoClick: function () {
+                'use strict';
+                base.Funciones.AccionLimpiarModal();
+                base.Controles.ModalNuevo.modal('show');
+            },
+            LinkNuevoRegistroClick: function () {
+                'use strict';
+                base.Controles.ModalNuevoRegistro.modal('show');
+            },
+            LinkGrabarClick: function () {
+                'use strict';
+                if (base.Util.Funciones.AccionValidarError('divNuevo') == true) {
+                    base.Funciones.AccionRegistrar();
+                }
+            },
+            LinkEditarClick: function () {
+                'use strict';
+                base.Funciones.AccionLimpiarModal();
+
+                var id = base.Controles.Grid.row(this.parentElement.parentElement).data().IdeSede
+                base.Funciones.AccionObtener(id);
+            },
+            LinkELiminarClick: function () {
+                'use strict';
+
+                var id = base.Controles.Grid.row(this.parentElement.parentElement).data().ideRegiPens
+                base.Funciones.AccionEliminar(id);
+            }
+        }
+    };
+}
+catch (ex) {
+    //SEDE
+}
+
