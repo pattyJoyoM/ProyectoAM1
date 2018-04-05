@@ -1,0 +1,353 @@
+-ef
+namespace Tawa.GestHum.Entities.Nomina
+{
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table("Nomina.M_Sede")]
+    public partial class M_Sede : BaseEntity
+    {
+        public M_Sede()
+        {
+        }
+        [Key]
+        public int IdeSede { get; set; }
+
+        public int ideEmpr { get; set; }
+        public string CodSede { get; set; }
+        public string DesSede { get; set; }
+        public string EstDomiFisc { get; set; }
+        public int IdeSedeRtps { get; set; }
+        public string NumRucSede { get; set; }
+        public int IdeTipoCasa { get; set; }
+        public int IdeVias { get; set; }
+        public string DirSede { get; set; }
+        public string NroCasa { get; set; }
+        public string NroInte { get; set; }
+        public int IdeZona { get; set; }
+        public string NomZona { get; set; }
+        public string DesRefe { get; set; }
+        public string NroFruc { get; set; }
+        public string EstCrie { get; set; }
+        public decimal ImpCrie { get; set; }
+        public int IdeUbicGeog { get; set; }
+
+
+    }
+
+}
+
+namespace Tawa.GestHum.Entities.Views.Nomina
+{
+   public class SedeDto
+    {
+        public int IdeSede { get; set; }
+
+        public int ideEmpr { get; set; }
+
+        public string CodSede { get; set; }
+
+        public string DesSede { get; set; }
+
+        public string EstDomiFisc { get; set; }
+
+        public int? IdeSedeRtps { get; set; }
+
+        public string DesSedeRtps { get; set; }
+
+        public string NumRucSede { get; set; }
+
+        public int? IdeTipoCasa { get; set; }
+
+        public string DesTipoCasa { get; set; }
+
+        public int? IdeVias { get; set; }
+
+        public string DesVias { get; set; }
+
+        public string DirSede { get; set; }
+
+        public string NroCasa { get; set; }
+
+        public string NroInte { get; set; }
+
+        public int? IdeZona { get; set; }
+
+        public string DesZona { get; set; }
+
+        public string NomZona { get; set; }
+
+        public string DesRefe { get; set; }
+
+        public string NroFruc { get; set; }
+
+        public string EstCrie { get; set; }
+
+        public decimal? ImpCrie { get; set; }
+
+        public int? IdeUbicGeog { get; set; }
+
+        public string CodPais { get; set; }
+    }
+}
+
+
+namespace Tawa.GestHum.Entities.Views.Nomina
+{
+    public class TipoZonaDto
+    {
+        public int IdeZona { get; set; }
+        public string TipRegi { get; set; }
+        public string CodZona { get; set; }
+        public string DesZona { get; set; }
+    }
+}
+
+namespace Tawa.GestHum.Entities.Views.Nomina
+{
+    public class TipoViasDto
+    {
+        public int IdeVias { get; set; }
+        public string TipRegi { get; set; }
+        public string CodVias { get; set; }
+        public string DesVias { get; set; }
+    }
+}
+
+namespace Tawa.GestHum.Entities.Views.Nomina
+{
+   public class TipoCasaDto
+    {
+       public int IdeTipoCasa { get; set; }
+       public string TipRegi { get; set; }
+       public string CodTipoCasa { get; set; }
+       public string DesTipoCasa { get; set; }
+    }
+}
+
+namespace Tawa.GestHum.Entities.Views.Nomina
+{
+    public class TipoSedeRtpsDto
+    {
+      public int IdeSedeRtps { get; set; }
+      public string CodSedeRtps { get; set; }
+      public string DesSedeRtps { get; set; }
+     public string CodUscr { get; set; }
+    }
+}
+
+
+-DA
+namespace Tawa.GestHum.Data
+{
+   public class M_SedeDA
+    {
+        //public List<SedeDto> Listar()
+        //{
+        //    using (GESHUMDataModel db = new GESHUMDataModel())
+        //    {
+        //        List<SedeDto> lista = (from s in db.M_Sede
+        //                               join v in db.se
+        //                               select s).ToList();
+        //        return lista;
+        //    }
+        //}
+        public List<TipoZonaDto> ListarZona()
+        {
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                var result = db.Database.SqlQuery<TipoZonaDto>("Nomina.USP_SEL_Vis_Zona_001");
+                return result.ToList();
+            }
+        }
+        public List<TipoViasDto> ListarVias()
+        {
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                var result = db.Database.SqlQuery<TipoViasDto>("Nomina.USP_SEL_Vis_Vias_001");
+                return result.ToList();
+            }
+        }
+        public List<TipoCasaDto> ListarTipoCasa()
+        {
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                var result = db.Database.SqlQuery<TipoCasaDto>("Nomina.USP_SEL_Vis_TipoCasa_001");
+                return result.ToList();
+            }
+        }
+        public List<TipoSedeRtpsDto> ListarTipoSedeRtps()
+        {
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                var result = db.Database.SqlQuery<TipoSedeRtpsDto>("Nomina.USP_SEL_Vis_SedesRtps_001");
+                return result.ToList();
+            }
+        }
+        public List<SedeDto> Buscar(string descripcion)
+        {
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                var result = db.Database.SqlQuery<SedeDto>("nomina.USP_SEL_M_Sede_001 @DesSede", new SqlParameter("DesSede", descripcion));
+
+                return result.ToList();
+            }
+        }
+        public bool ExisteCodigo(string codSede)
+        {
+            bool resultado = false;
+
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                M_Sede sede = (from s in db.M_Sede
+                               where s.CodSede == codSede
+                               select s).FirstOrDefault();
+
+                resultado = sede != null ? true : false;
+                return resultado;
+            }
+        }
+        public bool Registrar(M_Sede m_Sede)
+        {
+            bool resultado = false;
+
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                using (var transacction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        if (m_Sede.IdeSede > 0)
+                        {
+                            db.Entry(m_Sede).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            db.Entry(m_Sede).State = EntityState.Added;
+                        }
+                        db.SaveChanges();
+                        transacction.Commit();
+                        resultado = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transacction.Rollback();
+                        resultado = false;
+                        throw;
+                    }
+                }
+            }
+            return resultado;
+        }
+        public bool Eliminar(int id)
+        {
+            bool resultado = false;
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                M_Sede sede = (from s in db.M_Sede
+                               where s.IdeSede == id
+                               select s).FirstOrDefault();
+                db.M_Sede.Remove(sede);
+                db.SaveChanges();
+
+                return resultado;
+            }
+        }
+        public M_Sede Obtener(int id)
+        {
+            using (GESHUMDataModel db = new GESHUMDataModel())
+            {
+                M_Sede sede = (from s in db.M_Sede
+                               where s.IdeSede == id
+                               select s).FirstOrDefault();
+                return sede;
+            }
+        }
+    }
+}
+-BL
+
+namespace Tawa.GestHum.BusinessLogic.Nomina
+{
+    public class M_SedeBL
+    {
+        //public List<SedeDto> Listar()
+        //{
+        //}
+        public List<TipoZonaDto> ListarZona()
+        {
+            M_SedeDA m_SedeDA = new M_SedeDA();
+
+            return m_SedeDA.ListarZona();
+        }
+        public List<TipoViasDto> ListarVias()
+        {
+            M_SedeDA m_SedeDA = new M_SedeDA();
+
+            return m_SedeDA.ListarVias();
+        }
+        public List<TipoCasaDto> ListarTipoCasa()
+        {
+            M_SedeDA m_SedeDA = new M_SedeDA();
+
+            return m_SedeDA.ListarTipoCasa();
+        }
+        public List<TipoSedeRtpsDto> ListarTipoSedeRtps()
+        {
+            M_SedeDA m_SedeDA = new M_SedeDA();
+
+            return m_SedeDA.ListarTipoSedeRtps();
+        }
+        public List<SedeDto> Buscar(string descripcion)
+        {
+            M_SedeDA m_SedeDA = new M_SedeDA();
+
+            return m_SedeDA.Buscar(descripcion);
+        }
+        public Excepcion Registrar(M_Sede m_Sede)
+        {
+            M_SedeDA m_SedeDA = new M_SedeDA();
+            Excepcion excepcion = new Excepcion();
+
+            if (m_Sede.IdeSede == 0)
+            {
+                if (m_SedeDA.ExisteCodigo(m_Sede.CodSede))
+                {
+                    excepcion.Resultado = m_SedeDA.Registrar(m_Sede);
+                    excepcion.Tipo = ConstSistema.TipoMensaje.Correcto;
+                    excepcion.Mensaje = MensajeString.ProcesoSatisfactorio;
+                }
+                else
+                {
+                    excepcion.Tipo = ConstSistema.TipoMensaje.Alerta;
+                    excepcion.Mensaje = MensajeString.ExisteCodigo;
+                    excepcion.Resultado = false;
+                }
+            }
+            else
+            {
+                excepcion.Resultado = m_SedeDA.Registrar(m_Sede);
+                excepcion.Tipo = ConstSistema.TipoMensaje.Correcto;
+                excepcion.Mensaje = MensajeString.ProcesoSatisfactorio;
+            }
+            return excepcion;
+        }
+        public M_Sede Obtener(int id)
+        {
+            M_SedeDA m_SedeDA = new M_SedeDA();
+            return m_SedeDA.Obtener(id);
+        }
+        public Excepcion Eliminar(int id)
+        {
+            Excepcion excepcion = new Excepcion();
+            M_SedeDA m_SedeDA = new M_SedeDA();
+
+            excepcion.Mensaje = MensajeString.ProcesoSatisfactorio;
+            excepcion.Tipo = ConstSistema.TipoMensaje.Correcto;
+            excepcion.Resultado = m_SedeDA.Eliminar(id);
+
+            return excepcion;
+        }
+
+    }
+}
